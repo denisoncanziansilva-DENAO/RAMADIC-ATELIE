@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Scissors, 
   Clock, 
@@ -13,15 +13,43 @@ import {
   ShieldCheck, 
   Calendar, 
   MessageCircle,
-  X
+  X,
+  UserCheck,
+  LogIn
 } from 'lucide-react';
+import { authService } from './services/authService';
+import Login from './components/Login';
+import Register from './components/Register';
+import Dashboard from './components/Dashboard';
 
-export default function LandingPageCostura() {
+export default function App() {
+  const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'login' | 'register' | 'dashboard'
+  const [currentUser, setCurrentUser] = useState(null);
+
   // Estado para o simulador de preços
   const [selectedPiece, setSelectedPiece] = useState('calca');
   const [selectedService, setSelectedService] = useState('barra');
   const [trackingOS, setTrackingOS] = useState('');
   const [osResult, setOsResult] = useState(null);
+
+  // Checar usuário logado na inicialização
+  useEffect(() => {
+    const user = authService.getCurrentUser();
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, []);
+
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    setCurrentView('dashboard');
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    setCurrentUser(null);
+    setCurrentView('landing');
+  };
 
   // Base de dados do simulador
   const pricingData = {
@@ -73,6 +101,38 @@ export default function LandingPageCostura() {
     });
   };
 
+  // 1. Roteamento para Tela de Login
+  if (currentView === 'login') {
+    return (
+      <Login 
+        onNavigate={setCurrentView} 
+        onLoginSuccess={handleLoginSuccess} 
+      />
+    );
+  }
+
+  // 2. Roteamento para Tela de Cadastro
+  if (currentView === 'register') {
+    return (
+      <Register 
+        onNavigate={setCurrentView} 
+        onLoginSuccess={handleLoginSuccess} 
+      />
+    );
+  }
+
+  // 3. Roteamento para Dashboard / Bancada de Costura
+  if (currentView === 'dashboard') {
+    return (
+      <Dashboard 
+        user={currentUser} 
+        onLogout={handleLogout} 
+        onNavigate={setCurrentView} 
+      />
+    );
+  }
+
+  // 4. Landing Page Pública
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans antialiased">
       {/* 1. TOPO / AVISO SUPERIOR */}
@@ -103,19 +163,38 @@ export default function LandingPageCostura() {
             <a href="#faq" className="hover:text-amber-800 transition">Dúvidas</a>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <a
               href="#rastreio"
-              className="hidden lg:flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-lg text-slate-700 bg-slate-100 hover:bg-slate-200 transition"
+              className="hidden xl:flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2.5 rounded-xl text-slate-700 bg-slate-100 hover:bg-slate-200 transition cursor-pointer"
             >
               <Search className="w-3.5 h-3.5" />
               Rastrear OS
             </a>
+
+            {currentUser ? (
+              <button
+                onClick={() => setCurrentView('dashboard')}
+                className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2.5 rounded-xl text-amber-900 bg-amber-100 hover:bg-amber-200/80 border border-amber-200 transition cursor-pointer"
+              >
+                <UserCheck className="w-3.5 h-3.5 text-amber-800" />
+                <span>Minha Bancada ({currentUser.apelido_bancada || currentUser.nome.split(' ')[0]})</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setCurrentView('login')}
+                className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2.5 rounded-xl text-slate-700 bg-slate-100 hover:bg-slate-200 transition cursor-pointer"
+              >
+                <LogIn className="w-3.5 h-3.5 text-amber-800" />
+                <span>Área da Equipe</span>
+              </button>
+            )}
+
             <a
               href="https://wa.me/5511999999999"
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-2 text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-lg text-white bg-amber-800 hover:bg-amber-900 transition shadow-sm"
+              className="flex items-center gap-2 text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl text-white bg-amber-800 hover:bg-amber-900 transition shadow-sm"
             >
               <MessageCircle className="w-4 h-4" />
               <span>Agendar Prova</span>
@@ -460,7 +539,7 @@ export default function LandingPageCostura() {
             <div className="mt-6 p-4 rounded-2xl bg-amber-50/70 border border-amber-200 max-w-md mx-auto text-left relative animate-in fade-in slide-in-from-top-2 duration-300">
               <button 
                 onClick={() => setOsResult(null)}
-                className="absolute top-3 right-3 text-slate-400 hover:text-slate-600"
+                className="absolute top-3 right-3 text-slate-400 hover:text-slate-600 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -558,6 +637,14 @@ export default function LandingPageCostura() {
                 <li><a href="#servicos" className="hover:text-amber-400 transition">Tabela de Serviços</a></li>
                 <li><a href="#simulador" className="hover:text-amber-400 transition">Calcular Prazo e Preço</a></li>
                 <li><a href="#rastreio" className="hover:text-amber-400 transition">Acompanhar Minha OS</a></li>
+                <li>
+                  <button 
+                    onClick={() => setCurrentView('login')} 
+                    className="hover:text-amber-400 transition cursor-pointer text-left font-semibold text-amber-500"
+                  >
+                    Área da Costureira / Login
+                  </button>
+                </li>
               </ul>
             </div>
 
