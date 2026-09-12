@@ -83,16 +83,16 @@ export default function LandingPageCostura() {
 
       {/* 2. HEADER */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3.5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 min-h-[110px] flex items-center justify-between">
+          <div className="flex items-center gap-4">
             <img 
               src="/logo-ramadic.jpg" 
               alt="Ramadic Entre Linhas - Ateliê de Costura" 
-              className="w-12 h-12 rounded-2xl object-cover shadow-md border border-amber-200/80 ring-2 ring-amber-700/15 transition-transform hover:scale-105"
+              className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl object-contain shadow-lg border border-amber-200/90 ring-4 ring-amber-700/10 transition-transform hover:scale-105 bg-white p-1"
             />
-            <div>
-              <span className="text-xl font-extrabold tracking-tight text-slate-900 block leading-tight">Ramadic</span>
-              <span className="text-[11px] text-amber-800 tracking-wider uppercase font-bold">Entre Linhas • Ateliê de Costura</span>
+            <div className="hidden sm:block">
+              <span className="text-2xl font-extrabold tracking-tight text-slate-900 block leading-tight">Ramadic</span>
+              <span className="text-xs text-amber-800 tracking-wider uppercase font-bold">Entre Linhas • Ateliê de Costura</span>
             </div>
           </div>
 
@@ -520,16 +520,16 @@ export default function LandingPageCostura() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             
-            <div className="space-y-3">
-              <div className="flex items-center gap-3.5 text-white">
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-white">
                 <img 
                   src="/logo-ramadic.jpg" 
                   alt="Ramadic Entre Linhas - Ateliê de Costura" 
-                  className="w-12 h-12 rounded-2xl object-cover shadow-lg border border-amber-400/40 ring-2 ring-amber-400/20"
+                  className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl object-contain shadow-xl border border-amber-400/50 ring-4 ring-amber-400/20 bg-white p-1"
                 />
                 <div>
-                  <span className="text-lg font-extrabold tracking-tight block text-white">Ramadic</span>
-                  <span className="text-[11px] text-amber-400 tracking-wider uppercase font-semibold">Entre Linhas • Ateliê de Costura</span>
+                  <span className="text-xl font-extrabold tracking-tight block text-white">Ramadic</span>
+                  <span className="text-xs text-amber-400 tracking-wider uppercase font-semibold">Entre Linhas • Ateliê de Costura</span>
                 </div>
               </div>
               <p className="text-slate-400 leading-relaxed">
